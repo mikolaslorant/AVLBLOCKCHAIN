@@ -340,62 +340,6 @@ public class AVLTree<T> {
         return new DataPair<>(current, aux.getElement2());
     }
 
-
-
-
-
-    public List<T> getInRange(T inf, T sup) {
-        List<T> result = new LinkedList<>();
-        getInRange(root, result, inf, sup, cmp);
-        return result;
-    }
-
-    private void getInRange(Node<T> current, List<T> result, T inf, T sup, Comparator<T> cmp) {
-        if (current == null) {
-            return;
-        }
-        if (cmp.compare(inf, current.key) < 0 && cmp.compare(inf, current.key) > 0) {
-            result.add(current.key);
-        }
-        getInRange(current.right, result, inf, sup, cmp);
-        getInRange(current.left, result, inf, sup, cmp);
-        return;
-    }
-    public void print(){
-        printNodesByLevel();
-
-    }
-
-
-
-
-    public void printNodesByLevel() {
-        Deque<Node<T>> queue = new LinkedList<>();
-        if (root == null){
-            return;
-        }
-        queue.offer(root);
-        int i = 0 ;
-        double number = 1;
-        while (!queue.isEmpty()) {
-            Node<T> aux = queue.remove();
-            if(	Math.log(number)/Math.log(2.0) == i ){
-                System.out.println(" LEVEL + 1 = " + Math.log(number)/Math.log(2.0) );
-                i++;
-            }
-            if (aux != null) {
-                queue.offer(aux.left);
-                queue.offer(aux.right);
-                System.out.print( aux.toString() + "    ");
-            } else {
-                System.out.print("-EMPTY-    ");
-            }
-            number++;
-        }
-    }
-
-
-
     public static <T> int getHeight(Node<T> current) {
         if (current == null) return -1;
         return 1 + Math.max(getHeight(current.left), getHeight(current.right));
@@ -434,64 +378,7 @@ public class AVLTree<T> {
 
 
 
-    public int getLevel(T key) {
-        return getLevel(key, this.root, 0, this.cmp);
-    }
-
-    private int getLevel(T key, Node<T> current, int level, Comparator<T> cmp) {
-        if (current == null) return -1;
-        if (current.key.equals(key)) return level;
-
-        if (current.right != null && cmp.compare(key, current.key) > 0)
-            return getLevel(key, current.right, level + 1, cmp);
-        if (current.left != null && cmp.compare(key, current.key) < 0)
-            return getLevel(key, current.left, level + 1, cmp);
-        return -1;
-    }
-
-    public int getLeavesCount() {
-        return getLeavesCount(this.root);
-    }
-
-    public int getLeavesCount(Node<T> current) {
-        if (current == null) return 0;
-        int aux = getLeavesCount(current.left) + getLeavesCount(current.right);
-        if (aux == 0)
-            return 1;
-        return aux;
-    }
-
-    public T getMax() {
-        return getMax(this.root);
-    }
-
-    private T getMax(Node<T> current) {
-        if (current == null) {
-            return null;
-        }
-        if (current.right != null) {
-            return getMax(current.right);
-        }
-        return current.key;
-    }
-
-    public void printDescendants(Node<T> node) {
-        printDescendants(root, node, false);
-
-    }
-
-    private void printDescendants(Node<T> current, Node<T> node, boolean descendant) {
-        if (current == null) {
-            return;
-        }
-        if (descendant && current.equals(node)) {
-            printDescendants(current.right, node, true);
-            printDescendants(current.left, node, true);
-        }
-        if (descendant) {
-            System.out.println(current.toString());
-        }
-    }
+    
 
     public boolean equals(Object o) {
         if (o == null) return false;
