@@ -4,6 +4,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * The BlockChain containing the history of an AVLTree.
+ * The BlockChain contains a Terminal, a user-defined number of leading zeroes for the hashes, and an AVLTree
+ * @see AVLTree
+ */
 public class BlockChain {
 	private Terminal terminal;
 	private int zeros;
@@ -30,7 +35,14 @@ public class BlockChain {
 	public AVLTree<Integer> getTree() {
 		return tree;
 	}
-	
+	/**
+	 * Individual block of the BlockChain
+	 * Contains an index describing its position inside of the chain,
+	 * a number nonce, making the block's specific content evaluate to a hash value with a set number of zeroes
+	 * a string instruction describing the instruction to be saved by the block
+	 * a hash number specific to the block and its contents
+	 * a previous hash as an unalterable link to the hash that came before it
+	 */
 	private class Block {
 		
 		private int index;
@@ -70,7 +82,13 @@ public class BlockChain {
 		public String getInstruction() {
 			return instruction;
 		}
-		
+		/**
+		 * Calculates the hash value specific to the block and its contents.
+		 * <p>
+		 * The block's index, instruction, the previous hash, and the nonce are combined and
+		 * used to create the hash specific to this block
+		 * @return the string of the block's hash
+		 */
 		public String calculateHash() {  //calculates a valid hash according to zeros 
 			
 			int nonce = 0;
@@ -85,12 +103,21 @@ public class BlockChain {
 			this.nonce = nonce;
 			return hash;
 		}
-		
+		/**
+		 * Creates the has belonging to the block without the nonce value
+		 * @return the string of the hash
+		 */
 		public String calculateHashNoNonce() {  //calculates hash of Block with current nonce and data.
 		
 			String combination = getIndex() + getInstruction() + getPrevHash() + getNonce();
 			return sha256(combination);
-		}		
+		}
+		/**
+		 * Checks if the hash is valid.
+		 * By checking if the hash, with its nonce, has evaluated to a string with a sufficient number of leading zeroes 
+		 * @param hash the string has being tested
+		 * @return true if the has has a sufficient number of leading zeroes
+		 */
 		private boolean validHash(String hash) {
 
 			boolean valid = true;
@@ -126,7 +153,9 @@ public class BlockChain {
 		public void setinstruction(String data){
 			this.instruction = data;
 		}
-
+		/**
+		 * Formats the contents of the block conveniently for printing to the screen.
+		 */
 		public String toString() {
 			String ret = "[ " + "index:" + index + "/nonce: " + nonce;
 			ret += "/instruction: " + instruction + "]";
@@ -135,9 +164,14 @@ public class BlockChain {
 	}
 
     /**
-     * Receives instruction to perform on AVLTree, calls the correct method to excecute it and stores result in new block.
+     * Receives instruction to perform on AVLTree, calls the correct method to execute it and stores result in new block.
+     * <p>
+     * Valid operations include adding, removing, and looking up a value
      * @param action Method to call
-     * @param number
+     * @param number a key to either add, remove or look up
+     * @throws IllegalOperationException
+     * @see DataPair
+     * @see IllegalOperationException
      */
 	public void operate(String action, int number){  
         int currentIndex = size();
@@ -213,7 +247,11 @@ public class BlockChain {
 
 		return blockChain.get(size() - 1);
 	}
-
+	
+	/**
+	 * Creates a string containing all of the information of each block in the chain
+	 * @return the string representing the entire chain
+	 */
 	@Override
 	public String toString(){
 		String ret = new String();
